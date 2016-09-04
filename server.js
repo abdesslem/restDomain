@@ -2,6 +2,8 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var Domain     = require('./app/models/domain');
+var Contact     = require('./app/models/contact');
+
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,6 +34,7 @@ router.route('/domains')
 	      domain.admin = req.body.contactAdmin;
 	      domain.registrant = req.body.registrant;
 	      domain.host = req.body.host;
+        domain.authcode =req.body.authcode;
 
         domain.save(function(err) {
             if (err)
@@ -52,6 +55,39 @@ router.route('/domains')
         });
     });
 
+    router.route('/contacts')
+
+        .post(function(req, res) {
+
+            var contact = new Contact();
+            contact.name = req.body.name;
+    	      contact.street = req.body.street;
+    	      contact.country = req.body.country;
+    	      contact.phone = req.body.phone;
+    	      contact.fax = req.body.fax;
+    	      contact.postalCode = req.body.postalCode;
+    	      contact.authcode = req.body.authcode;
+    	      contact.email = req.body.email;
+            contact.city =req.body.city;
+
+            contact.save(function(err) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: 'Contact created!' });
+            });
+
+        })
+
+        // get all the domains (accessed at GET http://localhost:8080/api/domains)
+        .get(function(req, res) {
+            Contact.find(function(err, contacts) {
+                if (err)
+                    res.send(err);
+
+                res.json(contacts);
+            });
+        });
 
 router.route('/domains/:domain_name')
 // get the domain with that id (accessed at GET http://localhost:8080/api/domains/:domain_name)
