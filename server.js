@@ -1,9 +1,9 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var Contact     = require('./models/contact');
 var domains = require('./routes/domains'); //routes are defined here
-
+var contacts = require('./routes/contacts');
+var hosts = require('./routes/hosts');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,7 +20,10 @@ router.get('/', function(req, res) {
 });
 
 // all of our routes will be prefixed with /api
+app.use('/api', router);
 app.use('/api', domains);
+app.use('/api', contacts);
+app.use('/api', hosts);
 
 // START THE SERVER
 // =============================================================================
