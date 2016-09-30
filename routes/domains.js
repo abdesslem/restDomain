@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Domain     = require('../models/domain');
+var mongoose   = require('mongoose');
 
 router.route('/domains')
 
@@ -11,10 +12,10 @@ router.route('/domains')
         domain.name = req.body.name;  // set the domains name (comes from the request)
 	      domain.expiration = req.body.expiration;
 	      domain.creation = req.body.creation;
-	      domain.tech = req.body.contactTech;
-	      domain.billing = req.body.contactBilling;
-	      domain.admin = req.body.contactAdmin;
-	      domain.registrant = req.body.registrant;
+	      domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
+	      domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
+	      domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
+	      domain.registrant.push(mongoose.Types.ObjectId(req.body.registrant));
 	      domain.host = req.body.host;
         domain.authcode =req.body.authcode;
 
