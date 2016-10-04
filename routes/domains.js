@@ -20,9 +20,9 @@ router.route('/domains')
         domain.authcode =req.body.authcode;
 
         domain.save(function(err) {
-            if (err)
+            if (err) {
                 res.send(err);
-
+              }
             res.json({ message: 'Domain name created!' });
         });
 
@@ -31,9 +31,9 @@ router.route('/domains')
     // get all the domains (accessed at GET http://localhost:8080/api/domains)
     .get(function(req, res) {
         Domain.find(function(err, domains) {
-            if (err)
+            if (err) {
                 res.send(err);
-
+            }
             res.json(domains);
         });
     });
@@ -42,39 +42,42 @@ router.route('/domains/:domain_name')
 // get the domain with that id (accessed at GET http://localhost:8080/api/domains/:domain_name)
 
     .get(function(req, res) {
-        Domain.findOne(req.params.domain_name, function(err, domain) {
-          if (err)
+        Domain.findOne({name : req.params.domain_name}, function(err, domain) {
+          if (err) {
             res.send(err);
-
+          }
           res.json(domain);
         });
     })
 
     .put(function(req, res) {
 
-        Domain.findOne(req.params.domain_name, function(err, domain) {
+        Domain.findOne({name :req.params.domain_name}, function(err, domain) {
 
-            if (err)
+            if (err){
                 res.send(err);
+              }
 
-            domain.name = req.body.name;
+            domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
+            domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
+            domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
+            domain.host = req.body.host;
+            domain.authcode =req.body.authcode;
 
             domain.save(function(err) {
-                if (err)
+                if (err){
                     res.send(err);
-
+                  }
                 res.json({ message: 'Domain updated!' });
             });
-	});
+	      });
     })
 
     .delete(function(req, res) {
-                Domain.remove({
-                    name: req.params.domain_name
-                }, function(err, domain) {
-                    if (err)
+                Domain.remove({name: req.params.domain_name}, function(err, domain) {
+                    if (err) {
                         res.send(err);
-
+                    }
                     res.json({ message: 'Successfully deleted' });
                 });
     });

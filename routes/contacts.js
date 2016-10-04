@@ -43,7 +43,7 @@ router.route('/contacts/:contact_name')
 // get the contact with that id (accessed at GET http://localhost:8080/api/contacts/:contact_name)
 
     .get(function(req, res) {
-        Contact.findOne(req.params.contact_name, function(err, contact) {
+        Contact.findOne({name : req.params.contact_name }, function(err, contact) {
           if (err)
             res.send(err);
 
@@ -53,12 +53,22 @@ router.route('/contacts/:contact_name')
 
     .put(function(req, res) {
 
-        Contact.findOne(req.params.contact_name, function(err, contact) {
+        Contact.findOne({ name :req.params.contact_name}, function(err, contact) {
 
             if (err)
                 res.send(err);
 
-            contact.name = req.body.name;
+                contact.name = req.body.name;  // set the contacts name (comes from the request)
+        	      contact.organization = req.body.organization;
+        	      contact.email = req.body.email;
+        	      contact.street = req.body.street;
+        	      contact.city = req.body.city;
+        	      contact.province = req.body.province;
+        	      contact.postalCode = req.body.postalCode;
+        	      contact.country = req.body.country;
+                contact.phone = req.body.phone;
+                contact.fax = req.body.fax;
+                contact.authcode = req.body.authcode;
 
             contact.save(function(err) {
                 if (err)
@@ -70,9 +80,7 @@ router.route('/contacts/:contact_name')
     })
 
     .delete(function(req, res) {
-                Contact.remove({
-                    name: req.params.contact_name
-                }, function(err, contact) {
+                Contact.remove({ name: req.params.contact_name }, function(err, contact) {
                     if (err)
                         res.send(err);
 

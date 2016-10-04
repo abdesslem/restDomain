@@ -13,8 +13,9 @@ router.route('/hosts')
 	      domain.ipv6 = req.body.ipv6;
 
         domain.save(function(err) {
-            if (err)
+            if (err) {
                 res.send(err);
+            }
 
             res.json({ message: 'Host created!' });
         });
@@ -35,40 +36,40 @@ router.route('/hosts/:host_name')
 // get the domain with that id (accessed at GET http://localhost:8080/api/hosts/:host_name)
 
     .get(function(req, res) {
-        Host.findOne(req.params.host_name, function(err, host) {
-          if (err)
+        Host.findOne({name : req.params.host_name}, function(err, host) {
+          if (err){
             res.send(err);
-
+          }
           res.json(host);
         });
     })
 
     .put(function(req, res) {
 
-        Host.findOne(req.params.domain_name, function(err, host) {
+        Host.findOne({name : req.params.domain_name}, function(err, host) {
 
-            if (err)
+            if (err) {
                 res.send(err);
+              }
 
-            host.name = req.body.name;
+              domain.ipv4 = req.body.ipv4;
+      	      domain.ipv6 = req.body.ipv6;
 
             host.save(function(err) {
-                if (err)
+                if (err) {
                     res.send(err);
-
+                }
                 res.json({ message: 'Host updated!' });
             });
-	});
+	      });
     })
 
     .delete(function(req, res) {
-                Host.remove({
-                    name: req.params.host_name
-                }, function(err, host) {
-                    if (err)
-                        res.send(err);
-
-                    res.json({ message: 'Successfully deleted' });
+      Host.remove({ name: req.params.host_name }, function(err, host) {
+        if (err){
+          res.send(err);
+        }
+        res.json({ message: 'Successfully deleted' });
                 });
     });
 

@@ -1,13 +1,15 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 var domains = require('./routes/domains'); //routes are defined here
 var contacts = require('./routes/contacts');
 var hosts = require('./routes/hosts');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();
