@@ -24,7 +24,7 @@ router.route('/contacts')
             if (err)
                 res.send(err);
 
-            res.json({ message: 'contact name created!'});
+            res.json({ id : contact._id, message: 'contact name created!'});
         });
 
     })
