@@ -1,0 +1,57 @@
+{% set td = {'running':'success','frozen':'info','stopped':'important'} %}
+{% set tr = {'running':'success','frozen':'info','stopped':'error'} %}
+{% set disabled = {'running':'success','frozen':'info','stopped':'important'} %}
+{% extends "layout.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<div class="span9">
+	{{ super() }}
+	<p class="pull-right" style="margin:10px 10px 0 0;"><a class="btn btn-small btn-danger" data-toggle="modal" data-target="#reboot"><i class="icon-off icon-white"></i> Delete</a></p>
+	<p class="pull-right" style="margin:10px 10px 0 0;"><a class="btn btn-small btn-inverse" data-toggle="modal" data-target="#cloneCT"> <i class="icon-repeat icon-white"></i> Renew</a></p>
+	<p class="pull-right" style="margin:10px 10px 0 0;"><a class="btn btn-small btn-success" data-toggle="modal" data-target="#createCT"><i class="icon-plus-sign icon-white"></i>Create</a></p>
+
+	<div class="hero-unit">
+		<div class="row">
+			<div class="span3" style="margin-left:20px;">
+			</div>
+		</div>
+		<a href="" target="_blank"><span class="label label-info hide" id="version" style="position:relative; float:right; bottom:0; margin:-20px -23px 0 0;"><i class="icon-info-sign icon-white"></i> New version is out ! (<span id="vernumber"></span>)</span></a>
+	</div>
+
+	<form action="{{ url_for('check') }}" method="POST" class="form-signin">
+		<fieldset>
+		<legend>Check Domain</legend>
+		<div class="control-group">
+			<label class="control-label" for="inputUsername">Domain</label>
+			<div class="controls input-prepend">
+				<input id="inputUsername" type="text" placeholder="Domain" name="username" autofocus required>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input id="inputURL" type="hidden" name="url" value="{{ request.path }}">
+				<input type="submit" class="btn" value="Check"/>
+			</div>
+		</div>
+		</fieldset>
+	</form>
+	<table class="table table-bordered">
+	</table>
+</div>
+	{% include "includes/modal_reboot.html" %}
+	{% include "includes/modal_create.html" %}
+
+		{% include "includes/modal_clone.html" %}
+		{% include "includes/modal_destroy.html" %}
+
+{% endblock %}
+
+{% macro memory_color(value) -%}{% if value != 0 %}{% if 0 <= value <= 511 %}success{% elif 512 <= value < 980 %}warning{% else %}important{% endif %}{% endif %}{%- endmacro %}
+{% macro render_memory_wrapper(value) -%}
+	{% if value != 0 %}<span class="label label-{{ memory_color(value) }}">{{ value }} MB</span>{% endif %}
+{%- endmacro %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/bootstrapSwitch.js') }}"></script>
+
+{% endblock %}
