@@ -38,7 +38,7 @@ router.route('/domains')
         });
     });
 
-router.route('/domains/:domain_name')
+router.route('/domainCheck/:domain_name')
 // get the domain with that id (accessed at GET http://localhost:8080/api/domains/:domain_name)
 
     .get(function(req, res) {
@@ -46,9 +46,37 @@ router.route('/domains/:domain_name')
           if (err) {
             res.send(err);
           }
-          res.json(domain);
+          if (!domain)
+          {
+            res.json({ domain: req.params.domain_name, available: 'true' });
+          }
+          else
+          {
+            res.json({domain: req.params.domain_name, available: 'false' });
+          }
         });
     })
+
+router.route('/domainInfo/:domain_name')
+    // get the domain with that id (accessed at GET http://localhost:8080/api/domains/:domain_name)
+
+        .get(function(req, res) {
+            Domain.findOne({name : req.params.domain_name}, function(err, domain) {
+              if (err) {
+                res.send(err);
+              }
+              if (!domain)
+              {
+                res.json({ domain: req.params.domain_name, message: 'domain does not exist' });
+              }
+              else
+              {
+                res.json(domain);
+              }
+            });
+        })
+
+router.route('/domainUpdate/:domain_name')
 
     .put(function(req, res) {
 
@@ -72,6 +100,8 @@ router.route('/domains/:domain_name')
             });
 	      });
     })
+
+router.route('/domainDelete/:domain_name')
 
     .delete(function(req, res) {
                 Domain.remove({name: req.params.domain_name}, function(err, domain) {
