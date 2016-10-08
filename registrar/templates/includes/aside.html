@@ -4,14 +4,14 @@
 			<li class="nav-header">General</li>
 			<li{% if request.path=="/" or request.path=="/home" %} class="active"{% endif %}><a href="{{ url_for('home') }}" id="home-btn"><i class="icon-home"></i> Overview<i class="icon-refresh hide" id="home-load" style="float:right;margin-top:3px;"></i></a></li>
 		</ul>
-		{% if session.su == 'Yes' %}<ul class="nav nav-list">
-			<li class="nav-header">Pcap Total</li>
+		<ul class="nav nav-list">
+			<li class="nav-header">Dominy</li>
 			<li{% if request.path=="/packets" %} class="active"{% endif %}><a href=""><i class="icon-globe"></i> Packets</a></li>
 			<li{% if request.path=="/sessions" %} class="active"{% endif %}><a href="/sessions"><i class="icon-check"></i> Sessions </a></li>
-		</ul>{% endif %}
+		</ul>
 		<ul class="nav nav-list">
 			<li class="nav-header">Setting</li>
-			{% if session.su == 'Yes' %}<li{% if request.path=="/lwp/users" %} class="active"{% endif %}><a href="/users"><i class="icon-user"></i> Users</a></li>{% endif %}
+			<li{% if request.path=="/lwp/users" %} class="active"{% endif %}><a href="/users"><i class="icon-user"></i> Users</a></li>
 			<li{% if request.path=="/about" %} class="active"{% endif %}><a href="/about"><i class="icon-info-sign"></i> About</a></li>
 		</ul>
 	</div>
