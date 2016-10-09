@@ -86,18 +86,24 @@ router.route('/domainUpdate/:domain_name')
                 res.send(err);
               }
 
-            domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
-            domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
-            domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
-            domain.host = req.body.host;
-            domain.authcode =req.body.authcode;
+            if (domain)
+            {
+              domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
+              domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
+              domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
+              domain.host = req.body.host;
+              domain.authcode =req.body.authcode;
 
-            domain.save(function(err) {
+              domain.save(function(err) {
                 if (err){
                     res.send(err);
-                  }
+                }
                 res.json({ message: 'Domain updated!' });
-            });
+              });
+            }
+            else {
+              res.json({ domain: req.params.domain_name, message: 'domain does not exist' });
+            }
 	      });
     })
 
