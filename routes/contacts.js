@@ -39,21 +39,48 @@ router.route('/contacts')
         });
     });
 
-router.route('/contacts/:contact_name')
+router.route('/contactCheck/:contact_id')
 // get the contact with that id (accessed at GET http://localhost:8080/api/contacts/:contact_name)
 
     .get(function(req, res) {
-        Contact.findOne({name : req.params.contact_name }, function(err, contact) {
-          if (err)
-            res.send(err);
-
-          res.json(contact);
+        Contact.findOne({_id : req.params.contact_id }, function(err, contact) {
+            if (err){
+              res.send(err);
+            }
+            if (!contact)
+            {
+              res.json({ contact: req.params.domain_id, available: 'true' });
+            }
+            else
+            {
+              res.json({contact: req.params.domain_id, available: 'false' });
+            }
         });
     })
 
+router.route('/contactInfo/:contact_id')
+
+  .get(function(req, res) {
+      Contact.findOne({_id : req.params.contact_id }, function(err, contact) {
+        if (err){
+          res.send(err);
+        }
+        if (!contact)
+        {
+          res.json({ domain: req.params.domain_id, message: 'contact does not exist'});
+        }
+        else
+        {
+          res.json(contact);
+        }
+    });
+})
+
+router.route('/contactUpdate/:contact_id')
+
     .put(function(req, res) {
 
-        Contact.findOne({ name :req.params.contact_name}, function(err, contact) {
+        Contact.findOne({ _id :req.params.contact_id}, function(err, contact) {
 
             if (err)
                 res.send(err);
@@ -76,11 +103,12 @@ router.route('/contacts/:contact_name')
 
                 res.json({ message: 'contact name updated!' });
             });
-	});
+	         });
     })
 
+router.route('/contactDelete/:contact_id')
     .delete(function(req, res) {
-                Contact.remove({ name: req.params.contact_name }, function(err, contact) {
+                Contact.remove({ _id: req.params.contact_id }, function(err, contact) {
                     if (err)
                         res.send(err);
 
