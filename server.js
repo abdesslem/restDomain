@@ -15,7 +15,9 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/local'); // connect to our database
-
+//var username = process.env.USER;
+//var password = process.env.PASS;
+//mongoose.connect('mongodb://'+username+':'+password+'@ds053196.mlab.com:53196/regsitry');
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
     res.json({ message: 'API endpoint' });

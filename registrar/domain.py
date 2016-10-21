@@ -40,7 +40,7 @@ def info(domain):
 
 @domain.route('/create/', methods=['POST'])
 @domain.route('/create/', methods=['POST'])
-def info(domain):
+def create(domain):
     if request.method == 'POST':
         data = request.form
     myResponse = requests.post(createUrl+domain,data=data,headers=headers,verify=True)
