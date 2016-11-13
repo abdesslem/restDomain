@@ -8,7 +8,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 import json
 from domain import domain
-
+from contact import contact
 #from user import user
 try:
     import configparser
@@ -30,6 +30,7 @@ url = "http://127.0.0.1:8080/api/"
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.register_blueprint(domain)
+app.register_blueprint(contact)
 
 
 @app.route('/home')

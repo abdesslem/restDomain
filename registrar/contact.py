@@ -6,57 +6,57 @@ from flask import Blueprint
 import json
 import tortilla
 
-domain = Blueprint('domain',__name__)
+contact = Blueprint('contact',__name__, url_prefix='/contact')
 auth = HTTPBasicAuth()
 dominy = tortilla.wrap('http://127.0.0.1:8080/api')
 
 
-@domain.route('/check/<domain>', methods=['GET','POST'])
-def check(domain):
+@contact.route('/check/<contact>', methods=['GET','POST'])
+def check(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainCheck.get(domain)
+    if (contact):
+        dom = dominy.contactCheck.get(contact)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/update/<domain>', methods=['GET','POST'])
-def update(domain):
+@contact.route('/update/<contact>', methods=['GET','POST'])
+def update(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainUpdate.get(domain)
+    if (contact):
+        dom = dominy.contactUpdate.get(contact)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/info/<domain>', methods=['GET','POST'])
-def info(domain):
+@contact.route('/info/<contact>', methods=['GET','POST'])
+def info(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainInfo.get(domain)
+    if (contact):
+        dom = dominy.contactInfo.get(contact)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/create/', methods=['GET'])
+@contact.route('/create/', methods=['GET'])
 def create():
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    data = {"name":"soko.com","host": "ns.host","registrant": "5828ec398ee84a3f12000002",\
-    "admin": "5828ec398ee84a3f12000002","tech":"5828ec398ee84a3f12000002","billing":"5828ec398ee84a3f12000002","authcode":"lool"}
-    dom = dominy.domains.post(data=data)
+    data = {"name": "s","organization": "ovh","email": "t@t","street": "a","city": "a","country": "a","phone": "a","authcode": "a"}
+    #data = jsonify(data)
+    dom = dominy.contacts.post(data=data)
     return jsonify(dom)
 
-@domain.route('/delete/<domain>', methods=['DELETE'])
-def delete(domain):
+@contact.route('/delete/<contact>', methods=['DELETE'])
+def delete(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainDelete.get(domain)
+    if (contact):
+        dom = dominy.contactDelete.get(contact)
         return jsonify(dom)
     return '{}'
 
-@domain.errorhandler(404)
+@contact.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 

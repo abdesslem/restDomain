@@ -18,18 +18,17 @@
 		<a href="" target="_blank"><span class="label label-info hide" id="version" style="position:relative; float:right; bottom:0; margin:-20px -23px 0 0;"><i class="icon-info-sign icon-white"></i> New version is out ! (<span id="vernumber"></span>)</span></a>
 	</div>
 
-	<form action="{{ url_for('home') }}" method="POST" class="form-signin">
+	<form action="" method="POST" class="form-signin">
 		<fieldset>
 		<legend>Check Domain</legend>
 		<div class="control-group">
 			<label class="control-label" for="inputUsername">Domain</label>
 			<div class="controls input-prepend">
-				<input id="inputUsername" type="text" placeholder="Domain" name="username" autofocus required>
+				<input id="inputUsername" type="text" placeholder="Domain" name="domain" autofocus required>
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<input id="inputURL" type="hidden" name="url" value="{{ request.path }}">
 				<input type="submit" class="btn" value="Check"/>
 			</div>
 		</div>
