@@ -32,37 +32,53 @@ router.route('/hosts')
         });
     });
 
-router.route('/hosts/:host_name')
-// get the domain with that id (accessed at GET http://localhost:8080/api/hosts/:host_name)
+router.route('/hostCheck/:host_name')
 
     .get(function(req, res) {
-        Host.findOne({name : req.params.host_name}, function(err, host) {
-          if (err){
-            res.send(err);
-          }
-          res.json(host);
-        });
-    })
+            Host.findOne({name : req.params.host_name}, function(err, host) {
+              if (err) {
+                res.send(err);
+              }
+              if (!host)
+              {
+                res.json({ host: req.params.host_name, available: 'true' });
+              }
+              else
+              {
+                res.json({host: req.params.host_name, available: 'false' });
+              }
+            });
+        })
+
+router.route('/hostUpdate/:host_name')
 
     .put(function(req, res) {
 
-        Host.findOne({name : req.params.domain_name}, function(err, host) {
+        Host.findOne({name : req.params.host_name}, function(err, host) {
 
             if (err) {
                 res.send(err);
               }
 
-              domain.ipv4 = req.body.ipv4;
-      	      domain.ipv6 = req.body.ipv6;
+            if (host) {
 
-            host.save(function(err) {
+              host.ipv4 = req.body.ipv4;
+      	      host.ipv6 = req.body.ipv6;
+
+              host.save(function(err) {
                 if (err) {
                     res.send(err);
                 }
                 res.json({ message: 'Host updated!' });
-            });
+              });
+            }
+            else {
+              res.json({ host: req.params.host_name, message: 'host does not exist' });
+            }
 	      });
     })
+
+router.route('/hostDelete/:host_name')
 
     .delete(function(req, res) {
       Host.remove({ name: req.params.host_name }, function(err, host) {
