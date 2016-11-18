@@ -2,8 +2,8 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var ContactSchema   = new Schema({
-    name: { type: String, max: 100, default : 'Null'},
-    organization:  { type: String, max: 100, default : 'Null'},
+    name: { type: String, max: 100, required: true},
+    organization:  { type: String, max: 100, required: true},
     email: { type: String, required: true, max: 100},
     street: { type: String, required: true, max: 100},
     city : { type: String, required: true, max: 100},
