@@ -6,57 +6,56 @@ from flask import Blueprint
 import json
 import tortilla
 
-domain = Blueprint('domain',__name__)
+host = Blueprint('host',__name__)
 auth = HTTPBasicAuth()
 dominy = tortilla.wrap('http://127.0.0.1:8080/api')
 
 
-@domain.route('/check/<domain>', methods=['GET','POST'])
-def check(domain):
+@host.route('/check/<host>', methods=['GET','POST'])
+def check(host):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainCheck.get(domain)
+    if (host):
+        dom = dominy.hostCheck.get(host)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/update/<domain>', methods=['PUT'])
-def update(domain):
+@host.route('/update/<host>', methods=['GET','POST'])
+def update(host):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainUpdate.put(domain)
+    if (host):
+        dom = dominy.hostUpdate.put(host)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/info/<domain>', methods=['GET','POST'])
-def info(domain):
+@host.route('/info/<host>', methods=['GET','POST'])
+def info(host):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainInfo.get(domain)
+    if (host):
+        dom = dominy.hostInfo.get(host)
         return jsonify(dom)
     return '{}'
 
-@domain.route('/create/', methods=['GET','POST'])
+@host.route('/create/', methods=['GET','POST'])
 def create():
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    data = request.json
-    # parse json validator function to validate fields
-    dom = dominy.domains.post(data=data)
+    data = {"name":"soko.com"}
+    dom = dominy.hosts.post(data=data)
     return jsonify(dom)
 
-@domain.route('/delete/<domain>', methods=['DELETE'])
-def delete(domain):
+@host.route('/delete/<host>', methods=['GET','POST'])
+def delete(host):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    if (domain):
-        dom = dominy.domainDelete.delete(domain)
+    if (host):
+        dom = dominy.hostDelete.delete(host)
         return jsonify(dom)
     return '{}'
 
-@domain.errorhandler(404)
+@host.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 

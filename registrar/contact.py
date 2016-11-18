@@ -25,7 +25,7 @@ def update(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
     if (contact):
-        dom = dominy.contactUpdate.get(contact)
+        dom = dominy.contactUpdate.put(contact)
         return jsonify(dom)
     return '{}'
 
@@ -38,21 +38,21 @@ def info(contact):
         return jsonify(dom)
     return '{}'
 
-@contact.route('/create/', methods=['GET'])
+@contact.route('/create/', methods=['GET','POST'])
 def create():
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
-    data = {"name": "s","organization": "ovh","email": "t@t","street": "a","city": "a","country": "a","phone": "a","authcode": "a"}
+    data = {"name": "s"}
     #data = jsonify(data)
     dom = dominy.contacts.post(data=data)
     return jsonify(dom)
 
-@contact.route('/delete/<contact>', methods=['DELETE'])
+@contact.route('/delete/<contact>', methods=['GET','POST'])
 def delete(contact):
     #if 'username' in session :
     #     return render_template('index.html')  # render a template
     if (contact):
-        dom = dominy.contactDelete.get(contact)
+        dom = dominy.contactDelete.delete(contact)
         return jsonify(dom)
     return '{}'
 
