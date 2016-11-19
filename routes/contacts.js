@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var Contact     = require('../models/contact');
+var mongoose   = require('mongoose');
+var Schema = mongoose.Schema;
+
+// middleware to use for all requests
+router.use(function(req, res, next) {
+  console.log('middleware for contact.');
+  next(); // make sure we go to the next routes and don't stop here
+});
 
 router.route('/contacts')
 
@@ -8,6 +16,12 @@ router.route('/contacts')
 .post(function(req, res) {
 
   var contact = new Contact();      // create a new instance of the contact model
+  if (! (req.body.name || req.body.organization || req.body.email ||
+  req.body.street || req.body.city || req.body.phone || req.body.country || req.body.authcode ))
+  {
+    res.json({ "message": 'missing required fields'});
+  }
+
   contact.name = req.body.name;  // set the contacts name (comes from the request)
   contact.organization = req.body.organization;
   contact.email = req.body.email;
@@ -95,17 +109,12 @@ router.route('/contactUpdate/:contact_id')
     {
       res.json({ contact: req.params.domain_id, message: 'contact does not exist'});
     }
-    contact.name = req.body.name;
-    contact.organization = req.body.organization;
-    contact.email = req.body.email;
-    contact.street = req.body.street;
-    contact.city = req.body.city;
-    contact.province = req.body.province;
-    contact.postalCode = req.body.postalCode;
-    contact.country = req.body.country;
-    contact.phone = req.body.phone;
-    contact.fax = req.body.fax;
-    contact.authcode = req.body.authcode;
+
+    var contactData = ['name', 'organization', 'email','street',"city",
+    "province","postalCode","country","phone","authcode","fax"];
+    contactData.forEach(function(element) {
+      if (req.body[element]) contact[element] = req.body[element] ;
+    });
 
     contact.save(function(err) {
       if (err)
