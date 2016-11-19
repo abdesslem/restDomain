@@ -9,9 +9,11 @@ router.route('/domains')
 .post(function(req, res) {
 
   var domain = new Domain();      // create a new instance of the Domain model
+  if (! isValidDomain(req.body.name))
+  {
+    res.json({ "message": 'domain name is not valid'});
+  }
   domain.name = req.body.name;  // set the domains name (comes from the request)
-  domain.expiration = req.body.expiration;
-  domain.creation = req.body.creation;
   domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
   domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
   domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
@@ -76,6 +78,86 @@ router.route('/domainInfo/:domain_name')
   });
 })
 
+router.route('/domainRenew')
+
+.post(function(req, res) {
+
+  Domain.findOne({name :req.body.name}, function(err, domain) {
+
+    if (err){
+      res.send(err);
+    }
+    //&  0 < parseInt(req.body.period) & parseInt(req.body.period) < 10
+    if (domain )
+    {
+      //domain.expiration = req.body.host;
+      new Date(domain.expiration).setFullYear(new Date().getFullYear() + parseInt(req.body.period) );
+
+      domain.save(function(err) {
+        if (err){
+          res.send(err);
+        }
+        res.json({ message: 'Domain renewed!' });
+      });
+    }
+    else {
+      res.json({ domain: req.body.name, message: 'domain does not exist' });
+    }
+  });
+})
+
+router.route('/domainTransfer')
+
+.post(function(req, res) {
+
+  Domain.findOne({name :req.body.name}, function(err, domain) {
+
+    if (err){
+      res.send(err);
+    }
+    if (domain and req.body.sponsor)
+    {
+      domain.sponsor = req.body.sponsor;
+
+      domain.save(function(err) {
+        if (err){
+          res.send(err);
+        }
+        res.json({ message: 'Domain transfered!' });
+      });
+    }
+    else {
+      res.json({ domain: req.body.name, message: 'An error occured' });
+    }
+  });
+})
+
+router.route('/domainTrade')
+
+.post(function(req, res) {
+
+  Domain.findOne({name :req.body.name}, function(err, domain) {
+
+    if (err){
+      res.send(err);
+    }
+    if (domain)
+    {
+      domain.registrant = req.body.registrant;
+
+      domain.save(function(err) {
+        if (err){
+          res.send(err);
+        }
+        res.json({ message: 'Owner changed Successfully' });
+      });
+    }
+    else {
+      res.json({ domain: req.body.name, message: 'domain does not exist' });
+    }
+  });
+})
+
 router.route('/domainUpdate/:domain_name')
 
 .put(function(req, res) {
@@ -88,11 +170,12 @@ router.route('/domainUpdate/:domain_name')
 
     if (domain)
     {
-      domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
-      domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
-      domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
-      domain.host = req.body.host;
-      domain.authcode =req.body.authcode;
+
+      if (req.body.contactTech) domain.tech.push(mongoose.Types.ObjectId(req.body.contactTech));
+      if (req.body.contactBilling) domain.billing.push(mongoose.Types.ObjectId(req.body.contactBilling));
+      if (req.body.contactAdmin) domain.admin.push(mongoose.Types.ObjectId(req.body.contactAdmin));
+      if (req.body.host) domain.host = req.body.host;
+      if (req.body.authcode) domain.authcode =req.body.authcode;
 
       domain.save(function(err) {
         if (err){
@@ -118,4 +201,26 @@ router.route('/domainDelete/:domain_name')
   });
 });
 
+// only .slouma domains are accepted
+function isValidDomain(domain)
+{
+  if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[slouma]{2,})+$/.test(domain)){
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+function isValidHost(host)
+{
+  if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(host)){
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 module.exports = router;
