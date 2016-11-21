@@ -1,3 +1,6 @@
+#
+# This docker file is not fuctional anymore: mongodb is not installed in the image 
+#
 FROM node:argon
 
 # Create app directory
